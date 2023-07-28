@@ -6,6 +6,7 @@
       ],
       "disk_size": 250000,
       "guest_os_type": "RedHat_64",
+      "guest_additions_mode": "disable",
       "headless": "true",
       "hard_drive_interface": "sata",
       "http_directory": "http",
@@ -30,13 +31,11 @@
     "execute_command": "sudo sh '{{ .Path }}'",
     "expect_disconnect": true,
     "inline": [
-      "echo rm ~user/VBoxGuestAdditions*.iso",
-      "cp /etc/ssh/sshd_config /etc/ssh/sshd_config.ori",
       "sed -i -e '/#UseDNS yes/a UseDNS no' /etc/ssh/sshd_config",
       "truncate -s 0 /etc/machine-id",
       "truncate -s 0 /var/lib/dbus/machine-id",
       "rm -f /etc/udev/rules.d/70-persistent-net.rules",
-      "for nic in /etc/sysconfig/network-scripts/ifcfg-*; do sed -i /HWADDR/d $nic; done"
+      "sed -i /HWADDR/d /etc/sysconfig/network-scripts/ifcfg-*"
        ]
   }]
 }
