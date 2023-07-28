@@ -1,0 +1,42 @@
+{
+  "builders": [
+    {
+      "boot_command": [
+        "<up><tab> text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
+      ],
+      "disk_size": 250000,
+      "guest_os_type": "RedHat_64",
+      "headless": "true",
+      "hard_drive_interface": "sata",
+      "http_directory": "http",
+      "iso_checksum": "none",
+      "iso_url": "rhel-8.8-x86_64-dvd.iso",
+      "shutdown_command": "sudo shutdown -P now",
+      "ssh_username": "user",
+      "ssh_password": "password",
+      "ssh_wait_timeout": "3600s",
+      "type": "virtualbox-iso",
+      "vboxmanage": [
+        [ "modifyvm", "{{.Name}}", "--memory", "4096" ],
+        [ "modifyvm", "{{.Name}}", "--cpus", "4" ],
+        [ "modifyvm", "{{.Name}}", "--nat-localhostreachable1", "on"]
+      ],
+      "format": "ova",
+      "vm_name": "rhel8"
+    }
+  ],
+  "provisioners"             : [{
+    "type": "shell",
+    "execute_command": "sudo sh '{{ .Path }}'",
+    "expect_disconnect": true,
+    "inline": [
+      "echo rm ~user/VBoxGuestAdditions*.iso",
+      "cp /etc/ssh/sshd_config /etc/ssh/sshd_config.ori",
+      "sed -i -e '/#UseDNS yes/a UseDNS no' /etc/ssh/sshd_config",
+      "truncate -s 0 /etc/machine-id",
+      "truncate -s 0 /var/lib/dbus/machine-id",
+      "rm -f /etc/udev/rules.d/70-persistent-net.rules",
+      "for nic in /etc/sysconfig/network-scripts/ifcfg-*; do sed -i /HWADDR/d $nic; done"
+       ]
+  }]
+}
