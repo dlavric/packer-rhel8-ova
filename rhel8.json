@@ -34,7 +34,7 @@
       "truncate -s 0 /etc/machine-id",
       "truncate -s 0 /var/lib/dbus/machine-id",
       "rm -f /etc/udev/rules.d/70-persistent-net.rules",
-      "sed -i /HWADDR/d /etc/sysconfig/network-scripts/ifcfg-*"
+      "for nic in /etc/sysconfig/network-scripts/ifcfg-*; do sed -i /HWADDR/d $nic; done"
        ]
   }]
 }
