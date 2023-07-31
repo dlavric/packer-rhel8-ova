@@ -20,6 +20,12 @@ git clone https://github.com/kikitux/packer-rhel8-ova.git
 cd packer-rhel8-ova
 ```
 
+- add rhel iso
+
+```
+cp <path>/rhel-8.8-x86_64-dvd.iso .
+```
+
 # how to build
 
 run packer build
